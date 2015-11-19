@@ -3,42 +3,44 @@
  */
 
 class EventEmitter {
-    private handlers;
+    private _handlers;
 
     constructor() {
-        this.handlers = {};
+        this._handlers = {};
     }
 
     on(event:string, callback:Function) {
-        if (this.handlers[event] === undefined) {
-            this.handlers[event] = [callback];
+        if (this._handlers[event] === undefined) {
+            this._handlers[event] = [callback];
         } else {
-            this.handlers[event].push(callback);
+            this._handlers[event].push(callback);
         }
     }
 
     once(event:string, callback:Function) {
         var event_str = event + '.once';
-        if (this.handlers[event_str] === undefined) {
-            this.handlers[event_str] = [callback]
+        if (this._handlers[event_str] === undefined) {
+            this._handlers[event_str] = [callback]
         } else {
-            this.handlers[event_str].push(callback);
+            this._handlers[event_str].push(callback);
         }
     }
 
     emit(event:string, ...args:Array<any>) {
-        if (this.handlers[event + '.once'] != undefined) {
+        if (this._handlers[event + '.once'] != undefined) {
             setTimeout(()=> {
                 var event_str = event + '.once';
-                for (var _i in this.handlers[event_str]) {
-                    this.handlers[event_str][_i](args);
+                for (var _i in this._handlers[event_str]) {
+                    this._handlers[event_str][_i](args);
                 }
                 this.removeAllListener(event_str);
             }, 0);
-        } else if (this.handlers[event] != undefined) {
+        } else if (this._handlers[event] != undefined) {
             setTimeout(()=> {
-                for (var _i in this.handlers[event]) {
-                    this.handlers[event][_i](args);
+                var _funcs = Object.keys(this._handlers[event]);
+                var _len = _funcs.length;
+                for (var _i = 0; _i < _len; _i++) {
+                    this._handlers[event][_i](args);
                 }
             }, 0)
         } else {
@@ -47,25 +49,25 @@ class EventEmitter {
     }
 
     removeListener(event:string, callback:Function) {
-        if (this.handlers[event] != undefined) {
-            var len = this.handlers[event].length;
+        if (this._handlers[event] != undefined) {
+            var len = this._handlers[event].length;
             for (var _i = 0; _i < len; _i++) {
-                if (callback === this.handlers[event][_i]) {
-                    this.handlers[event].splice(_i, 1);
-                    if (this.handlers[event].length === 0) {
-                        delete this.handlers[event];
+                if (callback === this._handlers[event][_i]) {
+                    this._handlers[event].splice(_i, 1);
+                    if (this._handlers[event].length === 0) {
+                        delete this._handlers[event];
                     }
                     break;
                 }
             }
-        } else if (this.handlers[event + '.once'] != undefined) {
-            var len = this.handlers[event].length;
+        } else if (this._handlers[event + '.once'] != undefined) {
+            var len = this._handlers[event].length;
             var event_str = event + '.once';
             for (var _i = 0; _i < len; _i++) {
-                if (callback === this.handlers[event_str][_i]) {
-                    this.handlers[event_str].splice(_i, 1);
-                    if (this.handlers[event_str].length === 0) {
-                        delete this.handlers[event_str];
+                if (callback === this._handlers[event_str][_i]) {
+                    this._handlers[event_str].splice(_i, 1);
+                    if (this._handlers[event_str].length === 0) {
+                        delete this._handlers[event_str];
                     }
                     break;
                 }
@@ -74,8 +76,8 @@ class EventEmitter {
     }
 
     removeAllListener(event:string) {
-        if (this.handlers[event] != undefined) {
-            delete this.handlers[event];
+        if (this._handlers[event] != undefined) {
+            delete this._handlers[event];
         } else {
             console.warn('未找到注册的事件')
         }
