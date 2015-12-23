@@ -18,7 +18,7 @@ class EventEmitter {
     }
 
     once(event:string, callback:Function) {
-        var event_str = event + '.once';
+        let event_str = event + '.once';
         if (this._handlers[event_str] === undefined) {
             this._handlers[event_str] = [callback]
         } else {
@@ -29,17 +29,17 @@ class EventEmitter {
     emit(event:string, ...args:Array<any>) {
         if (this._handlers[event + '.once'] != undefined) {
             setTimeout(()=> {
-                var event_str = event + '.once';
-                for (var _i in this._handlers[event_str]) {
+                let event_str = event + '.once';
+                for (let _i in this._handlers[event_str]) {
                     this._handlers[event_str][_i](args);
                 }
                 this.removeAllListener(event_str);
             }, 0);
         } else if (this._handlers[event] != undefined) {
             setTimeout(()=> {
-                var _funcs = Object.keys(this._handlers[event]);
-                var _len = _funcs.length;
-                for (var _i = 0; _i < _len; _i++) {
+                let _funcs = Object.keys(this._handlers[event]);
+                let _len = _funcs.length;
+                for (let _i = 0; _i < _len; _i++) {
                     this._handlers[event][_i](args);
                 }
             }, 0)
@@ -48,11 +48,11 @@ class EventEmitter {
         }
     }
 
-    removeListener(event:string, callback:Function) {
+    removeListener(event:string, func:Function) {
         if (this._handlers[event] != undefined) {
-            var len = this._handlers[event].length;
-            for (var _i = 0; _i < len; _i++) {
-                if (callback === this._handlers[event][_i]) {
+            let _len = this._handlers[event].length;
+            for (let _i = 0; _i < _len; _i++) {
+                if (func === this._handlers[event][_i]) {
                     this._handlers[event].splice(_i, 1);
                     if (this._handlers[event].length === 0) {
                         delete this._handlers[event];
@@ -61,10 +61,10 @@ class EventEmitter {
                 }
             }
         } else if (this._handlers[event + '.once'] != undefined) {
-            var len = this._handlers[event].length;
-            var event_str = event + '.once';
-            for (var _i = 0; _i < len; _i++) {
-                if (callback === this._handlers[event_str][_i]) {
+            let len = this._handlers[event].length;
+            let event_str = event + '.once';
+            for (let _i = 0; _i < len; _i++) {
+                if (func === this._handlers[event_str][_i]) {
                     this._handlers[event_str].splice(_i, 1);
                     if (this._handlers[event_str].length === 0) {
                         delete this._handlers[event_str];
