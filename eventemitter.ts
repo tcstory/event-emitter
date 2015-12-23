@@ -27,29 +27,36 @@ class EventEmitter {
     }
 
     emit(event:string, ...args:Array<any>) {
+        let _flag = true;
         if (this._handlers[event + '.once'] != undefined) {
+            _flag = false;
             setTimeout(()=> {
                 let event_str = event + '.once';
-                for (let _i in this._handlers[event_str]) {
+                let _len = this._handlers[event_str].length;
+                for (let _i = 0; _i < _len; _i++) {
                     this._handlers[event_str][_i](args);
                 }
                 this.removeAllListener(event_str);
             }, 0);
-        } else if (this._handlers[event] != undefined) {
+        }
+        if (this._handlers[event] != undefined) {
+            _flag = false;
             setTimeout(()=> {
-                let _funcs = Object.keys(this._handlers[event]);
-                let _len = _funcs.length;
+                let _len = this._handlers[event].length;
                 for (let _i = 0; _i < _len; _i++) {
                     this._handlers[event][_i](args);
                 }
-            }, 0)
-        } else {
+            }, 0);
+        }
+        if (_flag) {
             console.warn('未找到注册的事件')
         }
     }
 
     removeListener(event:string, func:Function) {
+        let _flag = true;
         if (this._handlers[event] != undefined) {
+            _flag = false;
             let _len = this._handlers[event].length;
             for (let _i = 0; _i < _len; _i++) {
                 if (func === this._handlers[event][_i]) {
@@ -60,9 +67,11 @@ class EventEmitter {
                     break;
                 }
             }
-        } else if (this._handlers[event + '.once'] != undefined) {
-            let len = this._handlers[event].length;
+        }
+        if (this._handlers[event + '.once'] != undefined) {
+            _flag = false;
             let event_str = event + '.once';
+            let len = this._handlers[event_str].length;
             for (let _i = 0; _i < len; _i++) {
                 if (func === this._handlers[event_str][_i]) {
                     this._handlers[event_str].splice(_i, 1);
@@ -73,12 +82,22 @@ class EventEmitter {
                 }
             }
         }
+        if (_flag) {
+            console.warn('未找到注册的事件');
+        }
     }
 
     removeAllListener(event:string) {
+        let _flag = true;
         if (this._handlers[event] != undefined) {
+            _flag = false;
             delete this._handlers[event];
-        } else {
+        }
+        if (this._handlers[event + '.once'] != undefined) {
+            _flag = false;
+            delete this._handlers[event + '.once'];
+        }
+        if (_flag) {
             console.warn('未找到注册的事件')
         }
     }
