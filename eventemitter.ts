@@ -49,6 +49,16 @@ class EventEmitter {
         }
     }
 
+    listenerCount(event:string) {
+        if (this._handlers[event]) {
+            return this._handlers[event].length;
+        } else if (this._handlers[event + '.once']) {
+            return this._handlers[event + '.once'].length;
+        } else {
+            return 0;
+        }
+    }
+
     removeListener(event:string, func:Function) {
         let _flag = true;
         if (this._handlers[event] != undefined) {
