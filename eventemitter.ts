@@ -4,6 +4,7 @@
 
 class EventEmitter {
     private _handlers;
+    private _defaultListenerCount = 10;
 
     constructor() {
         this._handlers = {};
@@ -15,6 +16,7 @@ class EventEmitter {
         } else {
             this._handlers[event].push(callback);
         }
+        this._checkListenerNumber(event);
     }
 
     once(event:string, callback:Function) {
@@ -24,6 +26,7 @@ class EventEmitter {
         } else {
             this._handlers[event_str].push(callback);
         }
+        this._checkListenerNumber(event);
     }
 
     emit(event:string, ...args:Array<any>) {
@@ -108,5 +111,20 @@ class EventEmitter {
         }
     }
 
+    setDefaultListenerCount(n:number=10) {
+        this._defaultListenerCount = n;
+    }
+    getDefaultListenerCount() {
+        return this._defaultListenerCount;
+    }
+    private _checkListenerNumber(event:string) {
+        if (this._handlers[event].length >= this._defaultListenerCount) {
+            console.log('请注意, 当前已经为事件|' + event +'|' + '添加了' +
+                this._handlers[event].length +'个事件处理程序');
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
