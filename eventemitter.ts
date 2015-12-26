@@ -30,23 +30,19 @@ class EventEmitter {
         let _flag = true;
         if (this._handlers[event + '.once'] != undefined) {
             _flag = false;
-            setTimeout(()=> {
-                let event_str = event + '.once';
-                let _len = this._handlers[event_str].length;
-                for (let _i = 0; _i < _len; _i++) {
-                    this._handlers[event_str][_i](args);
-                }
-                this.removeAllListener(event_str);
-            }, 0);
+            let event_str = event + '.once';
+            let _len = this._handlers[event_str].length;
+            for (let _i = 0; _i < _len; _i++) {
+                this._handlers[event_str][_i](args);
+            }
+            this.removeAllListener(event_str);
         }
         if (this._handlers[event] != undefined) {
             _flag = false;
-            setTimeout(()=> {
-                let _len = this._handlers[event].length;
-                for (let _i = 0; _i < _len; _i++) {
-                    this._handlers[event][_i](args);
-                }
-            }, 0);
+            let _len = this._handlers[event].length;
+            for (let _i = 0; _i < _len; _i++) {
+                this._handlers[event][_i](args);
+            }
         }
         if (_flag) {
             console.warn('未找到注册的事件')
