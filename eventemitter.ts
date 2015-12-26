@@ -10,16 +10,17 @@ class EventEmitter {
         this._handlers = {};
     }
 
-    on(event:string, callback:Function) {
+    on(event:string, callback:Function):boolean {
         if (this._handlers[event] === undefined) {
             this._handlers[event] = [callback];
         } else {
             this._handlers[event].push(callback);
         }
         this._checkListenerNumber(event);
+        return true;
     }
 
-    once(event:string, callback:Function) {
+    once(event:string, callback:Function):boolean {
         let event_str = event + '.once';
         if (this._handlers[event_str] === undefined) {
             this._handlers[event_str] = [callback]
@@ -27,9 +28,10 @@ class EventEmitter {
             this._handlers[event_str].push(callback);
         }
         this._checkListenerNumber(event);
+        return true;
     }
 
-    emit(event:string, ...args:Array<any>) {
+    emit(event:string, ...args:Array<any>):boolean {
         let _flag = true;
         if (this._handlers[event + '.once'] != undefined) {
             _flag = false;
@@ -48,11 +50,14 @@ class EventEmitter {
             }
         }
         if (_flag) {
-            console.warn('未找到注册的事件')
+            console.warn('未找到注册的事件');
+            return false;
+        } else {
+            return true;
         }
     }
 
-    listenerCount(event:string) {
+    listenerCount(event:string):number {
         if (this._handlers[event]) {
             return this._handlers[event].length;
         } else if (this._handlers[event + '.once']) {
@@ -62,7 +67,7 @@ class EventEmitter {
         }
     }
 
-    removeListener(event:string, func:Function) {
+    removeListener(event:string, func:Function):boolean {
         let _flag = true;
         if (this._handlers[event] != undefined) {
             _flag = false;
@@ -93,10 +98,13 @@ class EventEmitter {
         }
         if (_flag) {
             console.warn('未找到注册的事件');
+            return false;
+        } else {
+            return true;
         }
     }
 
-    removeAllListener(event:string) {
+    removeAllListener(event:string):boolean {
         let _flag = true;
         if (this._handlers[event] != undefined) {
             _flag = false;
@@ -107,14 +115,18 @@ class EventEmitter {
             delete this._handlers[event + '.once'];
         }
         if (_flag) {
-            console.warn('未找到注册的事件')
+            console.warn('未找到注册的事件');
+            return false;
+        } else {
+            return true;
         }
     }
 
-    setDefaultListenerCount(n:number=10) {
+    setDefaultListenerCount(n:number=10):boolean {
         this._defaultListenerCount = n;
+        return true;
     }
-    getDefaultListenerCount() {
+    getDefaultListenerCount():number {
         return this._defaultListenerCount;
     }
     private _checkListenerNumber(event:string) {
