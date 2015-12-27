@@ -2,6 +2,7 @@
  * Created by tcstory on 10/24/15.
  */
 
+"use strict";
 class EventEmitter {
     private _handlers;
     private _defaultMaxListener = 10;
