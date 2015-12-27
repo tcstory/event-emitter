@@ -12,6 +12,9 @@ class EventEmitter {
     }
 
     on(event:string, callback:Function):boolean {
+        if (typeof callback !== 'function') {
+            throw new Error('请添加函数');
+        }
         if (this._handlers[event] === undefined) {
             this._handlers[event] = [callback];
         } else {
@@ -22,6 +25,9 @@ class EventEmitter {
     }
 
     once(event:string, callback:Function):boolean {
+        if (typeof callback !== 'function') {
+            throw new Error('请添加函数');
+        }
         callback['__once'] = true;
         if (this._handlers[event] === undefined) {
             this._handlers[event] = [callback]
