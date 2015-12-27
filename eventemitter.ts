@@ -4,7 +4,7 @@
 
 class EventEmitter {
     private _handlers;
-    private _defaultListenerCount = 10;
+    private _defaultMaxListener = 10;
 
     constructor() {
         this._handlers = {};
@@ -123,14 +123,14 @@ class EventEmitter {
     }
 
     setDefaultListenerCount(n:number=10):boolean {
-        this._defaultListenerCount = n;
+        this._defaultMaxListener = n;
         return true;
     }
     getDefaultListenerCount():number {
-        return this._defaultListenerCount;
+        return this._defaultMaxListener;
     }
     private _checkListenerNumber(event:string) {
-        if (this._handlers[event].length >= this._defaultListenerCount) {
+        if (this._handlers[event].length >= this._defaultMaxListener) {
             console.log('请注意, 当前已经为事件|' + event +'|' + '添加了' +
                 this._handlers[event].length +'个事件处理程序');
             return true;
