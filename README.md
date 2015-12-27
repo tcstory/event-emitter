@@ -12,6 +12,18 @@
 - `setDefaultListenerCount(n:number=10):boolean`
 - `getDefaultListenerCount():number`
 
+**传入参数**
+
+```
+var ev = new EventEmitter();
+ev.on('test',function(args){
+    console.log(args)
+});
+ev.emit('test','1','2','3')
+==> Array [ "1", "2", "3" ]
+```
+简单的来说,就是传给事件处理程序的参数,会被收集到一个变量中
+
 ### 提示
 - 不同于`nodejs`里的`events.EventEmitter`,使用该类注册的事件处理程序中的`this`并不会指向`EventEmitter`的实例(具体请看[nodejs文][1]档)
 
