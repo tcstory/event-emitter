@@ -105,8 +105,17 @@ class EventEmitter {
     }
 
     setDefaultListenerCount(n:number=10):boolean {
-        this._defaultMaxListener = n;
-        return true;
+        if (typeof n === 'number') {
+            if (!isNaN(n) && isFinite(n)) {
+                this._defaultMaxListener = n;
+                return true;
+            } else {
+                throw new Error('请传入有效的数值');
+            }
+        }  else {
+            throw new Error('参数类型不是number');
+        }
+
     }
     getDefaultListenerCount():number {
         return this._defaultMaxListener;
