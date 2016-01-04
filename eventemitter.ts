@@ -52,7 +52,7 @@ class EventEmitter {
             }
         }
         if (_flag) {
-            console.warn('未找到注册的事件');
+            console.warn('未找到注册的事件 |' + event + '|');
             return false;
         } else {
             return true;
@@ -83,7 +83,7 @@ class EventEmitter {
             }
         }
         if (_flag) {
-            console.warn('未找到注册的事件');
+            console.warn('未找到注册的事件 |' + event + '|');
             return false;
         } else {
             return true;
@@ -97,7 +97,7 @@ class EventEmitter {
             delete this._handlers[event];
         }
         if (_flag) {
-            console.warn('未找到注册的事件');
+            console.warn('未找到注册的事件 |' + event + '|');
             return false;
         } else {
             return true;
