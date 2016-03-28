@@ -16,11 +16,12 @@
 
 ```
 var ev = new EventEmitter();
-ev.on('test',function(args){
-    console.log(args)
-});
-ev.emit('test','1','2','3')
-==> Array [ "1", "2", "3" ]
+ev.on('test',function(x,y,z){
+        console.log(x+y+z)
+    }
+)
+ev.emit('test',1,2,3)
+==> 6
 ```
 简单的来说,就是传给事件处理程序的参数,会被收集到一个变量中
 
